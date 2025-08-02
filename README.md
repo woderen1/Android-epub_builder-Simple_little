@@ -43,11 +43,10 @@
 
 </details>
 - 现在是termux的时间了
-1. 敲命令`pkg install python`
-2. 敲命令`pip install ebooklib`
-3. 敲命令`cd /storage/emulated/0/Download/eebook`（如果你改了文件路径，就把cd 后的文件路径改成你的实际路径）
-4. 准备好了，最后一个命令
-`python epub_builder.py`
+1. 敲命令 `pkg install python`
+2. 敲命令 `pip install ebooklib`
+3. 敲命令 `cd /storage/emulated/0/Download/eebook`（如果你改了文件路径，就把cd 后的文件路径改成你的实际路径）
+4. 准备好了，最后一个命令 `python epub_builder.py`
 
 小提示<details markdown='1'><summary>展开/收起</summary>
 `epub_builder.py`里可以根据代码间注释来改变你的epub电子书的部分信息哦
@@ -62,7 +61,7 @@
 4. 让这个工具有更多功能
 5. 帮作者解答问题
 6. 直接Fork爆改这个项目
-7. **点个星标**
+7.**点个星标**
 
 </details>
 
