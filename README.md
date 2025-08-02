@@ -1,4 +1,5 @@
 # 在安卓上生成epub的非常简单方法，接近无脑程度
+有什么看不懂的直接看这个md文件的原始文件，或者直接在Issues里提问，不用不好意思
 ## 事前准备需要的软件有
 - mt管理器[[下载链接](https://mt2.cn/download/)]
 - termux[[github下载](https://github.com/termux/termux-app)或者在F-droid上下载]
@@ -16,16 +17,14 @@
 <details markdown='1'><summary>展开/收起</summary>
 最后的文件夹总体效果就是
 ----
-```
 —eebook
-——chapters
-———00001.txt
-———00002.txt
-———……（自己想弄多少弄多少）
-——covers
-———cover.jpg（封面，也能是png格式，图片大小至少是 800×600）
-——epub_builder.py（脚本文件）
-```
+ ——chapters
+   ———00001.txt
+   ———00002.txt
+   ———……（自己想弄多少弄多少）
+ ——covers
+   ———cover.jpg（封面，也能是png格式，图片大小至少是 800×600）
+ ——epub_builder.py（脚本文件）
 
 
 </details>
