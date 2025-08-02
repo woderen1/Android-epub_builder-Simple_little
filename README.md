@@ -25,14 +25,15 @@
 <details markdown='1'><summary>展开/收起</summary>
 最后的文件夹总体效果就是
 ----
-—eebook
- ——chapters
-   ———00001.txt
-   ———00002.txt
-   ———……（自己想弄多少弄多少）
- ——covers
-   ———cover.jpg（封面，也能是png格式，图片大小至少是 800×600）
- ——epub_builder.py（脚本文件）
+/storage/emulated/0/Download/eebook/
+├── chapters/
+│   ├── 00001.txt
+│   ├── 00002.txt
+│   └── ... (more chapters)
+├── covers/
+│   └── cover.jpg )
+└── epub_builder.py
+
 
 
 </details>
