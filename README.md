@@ -35,7 +35,6 @@
     │   └── cover.jpg (or.png)
     └── epub_builder.py
 
-    ```
 
 </details>
 - 现在是termux的时间了
