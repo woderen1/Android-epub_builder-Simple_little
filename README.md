@@ -31,7 +31,7 @@
 │   ├── 00002.txt
 │   └── ... (more chapters)
 ├── covers/
-│   └── cover.jpg )
+│   └── cover.jpg (or.png，至少800×600)
 └── epub_builder.py
 
 
