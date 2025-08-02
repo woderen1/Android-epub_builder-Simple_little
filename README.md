@@ -25,16 +25,17 @@
 <details markdown='1'><summary>展开/收起</summary>
 最后的文件夹总体效果就是
 ----
-/storage/emulated/0/Download/eebook/
-├── chapters/
-│   ├── 00001.txt
-│   ├── 00002.txt
-│   └── ... (more chapters)
-├── covers/
-│   └── cover.jpg (or.png，至少800×600)
-└── epub_builder.py
+    ```
+    /storage/emulated/0/Download/eebook/
+    ├── chapters/
+    │   ├── 00001.txt
+    │   ├── 00002.txt
+    │   └── ... (more chapters)
+    ├── covers/
+    │   └── cover.jpg (or.png)
+    └── epub_builder.py
 
-
+    ```
 
 </details>
 - 现在是termux的时间了
