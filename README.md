@@ -1,5 +1,7 @@
 # 在安卓上生成epub的非常简单方法，接近无脑程度
 有什么看不懂的直接看这个md文件的原始文件，或者直接在Issues里提问，不用不好意思
+###缺点:只支持简单文字，不支持文中插图和文中插入超链接（但是你把链接地址放到里头让别人手动复制粘贴是可以的）。
+###可能雷点:py脚本有ai（Deepseek）内容
 ## 事前准备需要的软件有
 - mt管理器[[下载链接](https://mt2.cn/download/)]
 - termux[[github下载](https://github.com/termux/termux-app)或者在F-droid上下载]
