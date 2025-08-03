@@ -55,7 +55,7 @@
 
 <details markdown='1'><summary>展开/收起</summary>
 
-
+换源命令: `termux-change-repo`
 
 </details>
 
