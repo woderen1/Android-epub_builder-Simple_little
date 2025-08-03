@@ -53,6 +53,12 @@
 </details>
 - 现在是termux的时间了
 
+<details markdown='1'><summary>展开/收起</summary>
+
+
+
+</details>
+
 1. 敲命令 `termux-setup-storage`
 
 2. 敲命令 `pkg install python`
