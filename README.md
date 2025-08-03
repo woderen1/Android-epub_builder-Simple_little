@@ -51,11 +51,15 @@
 
 </details>
 - 现在是termux的时间了
-1. 敲命令 ` termux-setup-storage
+1. 敲命令 ` termux-setup-storage `
+
 2. 敲命令 `pkg install python`
+
 3. 敲命令 `pip install ebooklib`
+
 4. 敲命令 `cd /storage/emulated/0/Download/eebook`（如果你改了文件路径，就把cd 后的文件路径改成你的实际路径）
-4. 准备好了，最后一个命令 `python epub_builder.py`
+
+5. 准备好了，最后一个命令 `python epub_builder.py`
 
 小提示<details markdown='1'><summary>展开/收起</summary>
 `epub_builder.py`里可以根据代码间注释来改变你的epub电子书的部分信息哦
