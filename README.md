@@ -51,7 +51,8 @@
 
 </details>
 - 现在是termux的时间了
-1. 敲命令 ` termux-setup-storage `
+
+1. 敲命令 `termux-setup-storage`
 
 2. 敲命令 `pkg install python`
 
