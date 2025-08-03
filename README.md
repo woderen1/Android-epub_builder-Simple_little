@@ -63,6 +63,18 @@
 
 5. 敲命令 `pip install ebooklib`
 
+<details markdown='1'><summary>展开/收起</summary>
+
+镜像源 `pip install -i https://pypi.doubanio.com/simple/ --trusted-host pypi.doubanio.com ebooklib
+`
+别的(按照这个格式):
+
+清华源 `https://pypi.tuna.tsinghua.edu.cn/simple/`
+
+阿里云 `https://mirrors.aliyun.com/pypi/simple/`
+
+</details>
+
 6. 敲命令 `cd /storage/emulated/0/Download/eebook`（如果你改了文件路径，就把cd 后的文件路径改成你的实际路径）
 
 7. 准备好了，最后一个命令 `python epub_builder.py`
