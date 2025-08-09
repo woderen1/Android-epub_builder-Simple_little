@@ -20,7 +20,7 @@
 ## 事前准备需要的软件有
 - mt管理器[[下载链接](https://mt2.cn/download/)]
 - termux[[github下载](https://github.com/termux/termux-app)或者在F-droid上下载]
-- epub_builder.py[[py脚本下载](https://github.com/wodegeren/Android-epub_builder-Simple_little/releases/tag/Android-epub_builder)]
+- epub_builder.py[[py脚本下载](https://github.com/wodegeren/Android-epub_builder-Simple_little/releases/tag/Android-epub_builder)](_更建议直接从Code下载代码_)
 ## 准备好后，第一步
 - 打开mt管理器
 在`/storage/emulated/0/Download/eebook`创建`chapters`文件夹和`covers`文件夹
