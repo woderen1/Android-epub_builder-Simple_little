@@ -90,6 +90,26 @@
 
 </details>
 
+# 试验性功能部分 ⚠️不稳定❗❗❗
+<details markdown='1'><summary>展开/收起</summary>
+-具有插图功能
+需要下载的脚本是 `v0.02epub_builderIMG.py`
+
+需要安装python和lxml
+
+安装python `pkg install python`
+
+安装lxml `pip install lxml`
+
+在`/storage/emulated/0/Download/Ezbook/`下创建`OEBPS`文件夹。在`OEBPS`文件夹里创建txt文件(与原来规则不变)和`images`文件夹(与txt文件同级)
+`images`文件夹内存放封面图片(与原来规则一样)和文中插图。**只支持jpg和png** 敏感大小写
+引用方法，在txt文本中，单独一行，在那一行中使用 `[图片名.图格式]` 的方式来引用。
+⚠️只用写图片名，脚本会帮你的，中文命名禁止❗
+⚠️保留中括号
+❗假如你的图片文件名是`filename.jpg`，那么引用时就单开一行写`[filename.jpg]`
+脚本会帮助你的
+
+</details>
 # 想贡献的看这里
 <details markdown='1'><summary>展开/收起</summary>
 
