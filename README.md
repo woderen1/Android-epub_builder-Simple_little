@@ -92,7 +92,9 @@
 
 # 试验性功能部分 ⚠️不稳定❗❗❗
 <details markdown='1'><summary>展开/收起</summary>
--具有插图功能
+
+-
+具有插图功能
 需要下载的脚本是 `v0.02epub_builderIMG.py`
 
 需要安装python和lxml
