@@ -16,43 +16,49 @@
 -
 除了安卓以外还支持windows macos Linux
 -
-### 缺点:只支持简单文字，不支持文中插图和文中插入超链接（但是你把链接地址放到里头让别人手动复制粘贴是可以的）。
+### 缺点:只支持简单文字和支持文中插图(两个脚本)，不支持文中插入超链接（但是你把链接地址放到里头让别人手动复制粘贴是可以的）。
 -
 ### 可能雷点:py脚本有ai（Deepseek）内容
 ## 事前准备需要的软件有
 - mt管理器[[下载链接](https://mt2.cn/download/)]
 - termux[[github下载](https://github.com/termux/termux-app)或者在F-droid上下载]
-- epub_builder.py[[py脚本下载](https://github.com/wodegeren/Android-epub_builder-Simple_little/releases/tag/Android-epub_builder)]
-## 准备好后，第一步
+
+### 纯文字epub制作方法
+
 - 打开mt管理器
 在`/storage/emulated/0/Download/eebook`创建`chapters`文件夹和`covers`文件夹
 <details markdown='1'><summary>展开/收起</summary>
-其实创建文件夹的路径位置是别的位置也行，就是需要改动一下你下载的`.py`脚本的里的路径，但是不建议，因为再小的风险也是风险。
+
+其实创建文件夹的路径位置是别的位置也行，就是需要改动一下你下载的 `.py` 脚本的里的路径，但是不建议，因为再小的风险也是风险。
 而且这个项目是无脑生成，你都无脑了就别自己改了
 
 </details>
 
-`chapters`的文件创建方式
 你需要下载的脚本是`epub_builder.py`。
 创建文件方式:在`chapters`文件夹下直接创建文件名形如`00001.txt`的文件，注意如果超过10章，那文件名就是`00010.txt`的形式，超过百章，文件名就是`00100.txt`的形式。千章就以此类推。
 注意，cover.jpg或者cover.png的图片的大小至少是800×600
 <details markdown='1'><summary>展开/收起</summary>
 最后的文件夹总体效果就是
+
 ----
-    
+
+
     ```
     /storage/emulated/0/Download/eebook/
     ├── chapters/
     │   ├── 00001.txt
     │   ├── 00002.txt
-    │   └── ... (more chapters)
+    │   └── ... (more txt)
     ├── covers/
     │   └── cover.jpg (or.png)
     └── epub_builder.py
-    
+
     ```
 
 </details>
+
+----
+
 - 现在是termux的时间了
 
 <details markdown='1'><summary>展开/收起</summary>
@@ -92,28 +98,48 @@
 
 </details>
 
-# 试验性功能部分 ⚠️不稳定❗❗❗
+### 带插图功能使用方法
+-
+需要下载的脚本是 `v0.02Sepub_builderIMG.py`
+----
+在`/storage/emulated/0/Download/Ezbook/`下创建`OEBPS`文件夹。在`OEBPS`文件夹里创建txt文件(与原来规则不变)和`images`文件夹(与txt文件同级)
+`images`文件夹内存放封面图片(与原来规则一样)和文中插图。**只支持jpg和png** 敏感大小写
+最后效果大概是
 <details markdown='1'><summary>展开/收起</summary>
 
--
-具有插图功能
-需要下载的脚本是 `v0.02Sepub_builderIMG.py`(彩蛋版本)
+    /storage/emulated/0/Download/Ezbook/
+    ├─v0.02Sepub_builderIMG.py
+    └─ OEBPS/
+                ├── images/
+                              ├cover.jpg(或cover.png)
+                              └其他插图.jpg/png
+                ├── 00001.txt
+                ├── 00002.txt
+                ├── 00003.txt
+                └── (more txt)
 
+
+</details>
+
+-
+引用方法，在txt文本中，单独一行，在那一行中使用 `[图片名.图格式]` 的方式来引用。
+-
+⚠️只用写图片名，脚本会帮你的，中文命名禁止❗
+-
+⚠️保留中括号
+-
+❗假如你的图片文件名是`filename.jpg`，那么引用时就单开一行写`[filename.jpg]`
+脚本会帮助你的
+Termux的时间
 需要安装python和lxml
 
 安装python `pkg install python`
 
 安装lxml `pip install lxml`
 
-在`/storage/emulated/0/Download/Ezbook/`下创建`OEBPS`文件夹。在`OEBPS`文件夹里创建txt文件(与原来规则不变)和`images`文件夹(与txt文件同级)
-`images`文件夹内存放封面图片(与原来规则一样)和文中插图。**只支持jpg和png** 敏感大小写
-引用方法，在txt文本中，单独一行，在那一行中使用 `[图片名.图格式]` 的方式来引用。
-⚠️只用写图片名，脚本会帮你的，中文命名禁止❗
-⚠️保留中括号
-❗假如你的图片文件名是`filename.jpg`，那么引用时就单开一行写`[filename.jpg]`
-脚本会帮助你的
+打开目录 `cd /storage/emulated/0/Download/Ezbook/`
 
-</details>
+运行使用脚本文件 `python v0.02Gepub_builderIMG.py`
 
 -
 # 想贡献的看这里
@@ -138,4 +164,4 @@
 -
 
 ## 仅限个人学习使用，只转化个人笔记或者不受版权保护的文本。不要转化受版权保护的内容！！
-本开发者不为用户的个人行为负任何责任！！！！！
+本开发者不为用户的个人行为承担任何责任！！！！！
