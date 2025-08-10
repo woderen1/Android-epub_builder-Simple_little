@@ -105,13 +105,15 @@
 最后效果大概是
 <details markdown='1'><summary>展开/收起</summary>
 
-    ```
     /storage/emulated/0/Download/Ezbook/
-    ├── OEBPS
-    
-    └── epub_builder.py
-    
-    ```
+    └── OEBPS/
+    ├── images/
+    │   ├── cover.jpg(或cover.png)
+    │   └── 其他插图.jpg/png
+    ├── 00001.txt
+    ├── 00002.txt
+    ├── 00003.txt
+    └── (more txt)
 
 </details>
 
