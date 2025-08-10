@@ -373,7 +373,7 @@ def package_epub(work_dir, output_path):
                     arcname = os.path.relpath(file_path, work_dir)
                     zipf.write(file_path, arcname)
     
-    print(f"\n📦 魅魔工作完毕: {output_path}")
+    print(f"\n📦 魅魔工作完毕，魅魔小姐希望你没有被盗版骗付费下载: {output_path}")
 
 if __name__ == "__main__":
     # 确保创建CSS文件
