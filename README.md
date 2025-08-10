@@ -93,9 +93,6 @@
 
 7. 准备好了，最后一个命令 `python epub_builder.py`
 
-小提示<details markdown='1'><summary>展开/收起</summary>
-`epub_builder.py`里可以根据代码间注释来改变你的epub电子书的部分信息哦
-
 </details>
 
 ### 带插图功能使用方法
@@ -141,6 +138,9 @@ Termux的时间
 
 运行使用脚本文件 `python v0.02Gepub_builderIMG.py`
 
+----
+小提示<details markdown='1'><summary>展开/收起</summary>
+`epub_builder.py`里可以根据代码间注释来改变你的epub电子书的部分信息哦
 -
 # 想贡献的看这里
 <details markdown='1'><summary>展开/收起</summary>
