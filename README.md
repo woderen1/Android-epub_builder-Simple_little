@@ -14,7 +14,7 @@
 -
 除了安卓以外还支持windows macos Linux
 -
-### 缺点:只支持简单文字，不支持文中插图和文中插入超链接（但是你把链接地址放到里头让别人手动复制粘贴是可以的）。
+### 缺点:只支持简单文字和支持文中插图(两个脚本)，不支持文中插入超链接（但是你把链接地址放到里头让别人手动复制粘贴是可以的）。
 -
 ### 可能雷点:py脚本有ai（Deepseek）内容
 ## 事前准备需要的软件有
@@ -31,7 +31,7 @@
 
 </details>
 
-`chapters`的文件创建方式
+###纯文本使用方法
 你需要下载的脚本是`epub_builder.py`。
 创建文件方式:在`chapters`文件夹下直接创建文件名形如`00001.txt`的文件，注意如果超过10章，那文件名就是`00010.txt`的形式，超过百章，文件名就是`00100.txt`的形式。千章就以此类推。
 注意，cover.jpg或者cover.png的图片的大小至少是800×600
@@ -91,18 +91,9 @@
 
 </details>
 
-# 试验性功能部分 ⚠️不稳定❗❗❗
-<details markdown='1'><summary>展开/收起</summary>
-
+### 带插图功能使用方法
 -
-具有插图功能
 需要下载的脚本是 `v0.02epub_builderIMG.py`
-
-需要安装python和lxml
-
-安装python `pkg install python`
-
-安装lxml `pip install lxml`
 
 在`/storage/emulated/0/Download/Ezbook/`下创建`OEBPS`文件夹。在`OEBPS`文件夹里创建txt文件(与原来规则不变)和`images`文件夹(与txt文件同级)
 `images`文件夹内存放封面图片(与原来规则一样)和文中插图。**只支持jpg和png** 敏感大小写
@@ -115,8 +106,16 @@
 -
 ❗假如你的图片文件名是`filename.jpg`，那么引用时就单开一行写`[filename.jpg]`
 脚本会帮助你的
+Termux的时间
+需要安装python和lxml
 
-</details>
+安装python `pkg install python`
+
+安装lxml `pip install lxml`
+
+打开目录 `cd /storage/emulated/0/Download/Ezbook/`
+
+运行使用脚本文件 `python v0.02Gepub_builderIMG.py`
 
 -
 # 想贡献的看这里
