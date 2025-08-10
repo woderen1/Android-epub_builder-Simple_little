@@ -102,7 +102,7 @@ def generate_epub():
     # 6. 保存文件
     output_path = os.path.join(os.path.dirname(CHAPTERS_DIR), f"{BOOK_TITLE}.epub")
     epub.write_epub(output_path, book, {})
-    print(f"✅ EPUB生成成功！路径：{output_path}")
+    print(f"如果你是付费下载的那你被盗版骗了✅ EPUB生成成功！路径：{output_path}")
 
 if __name__ == "__main__":
     generate_epub()
