@@ -37,7 +37,9 @@
 注意，cover.jpg或者cover.png的图片的大小至少是800×600
 <details markdown='1'><summary>展开/收起</summary>
 最后的文件夹总体效果就是
+
 ----
+
     
     ```
     /storage/emulated/0/Download/eebook/
@@ -52,7 +54,9 @@
     ```
 
 </details>
+
 ----
+
 - 现在是termux的时间了
 
 <details markdown='1'><summary>展开/收起</summary>
