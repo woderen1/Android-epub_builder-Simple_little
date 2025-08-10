@@ -136,7 +136,7 @@ Termux的时间
 
 打开目录 `cd /storage/emulated/0/Download/Ezbook/`
 
-运行使用脚本文件 `python v0.02Gepub_builderIMG.py`
+运行使用脚本文件 `python v0.02Sepub_builderIMG.py`
 
 ----
 小提示<details markdown='1'><summary>展开/收起</summary>
