@@ -373,7 +373,7 @@ def package_epub(work_dir, output_path):
                     arcname = os.path.relpath(file_path, work_dir)
                     zipf.write(file_path, arcname)
     
-    print(f"\n📦 EPUB已打包: {output_path}")
+    print(f"\n📦 免费EPUB已打包，付费下载均为盗版: {output_path}")
 
 if __name__ == "__main__":
     # 确保创建CSS文件
