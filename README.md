@@ -111,8 +111,8 @@
     ├─v0.02Sepub_builderIMG.py
     └─ OEBPS/
                 ├── images/
-                              ├cover.jpg(或cover.png)
-                              └其他插图.jpg/png
+                ║              ├cover.jpg(或cover.png)
+                ║              └其他插图.jpg/png
                 ├── 00001.txt
                 ├── 00002.txt
                 ├── 00003.txt
