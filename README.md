@@ -140,7 +140,7 @@ Termux的时间
 
 ----
 小提示<details markdown='1'><summary>展开/收起</summary>
-`epub_builder.py`里可以根据代码间注释来改变你的epub电子书的部分信息哦
+两个`.py`里都可以根据代码间注释来改变你的epub电子书的部分信息哦
 -
 # 想贡献的看这里
 <details markdown='1'><summary>展开/收起</summary>
