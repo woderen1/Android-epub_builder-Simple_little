@@ -106,8 +106,8 @@
 <details markdown='1'><summary>展开/收起</summary>
 
     /storage/emulated/0/Download/Ezbook/
-    ├v0.02epub_builderIMG.py
-    └ OEBPS/
+    ├─v0.02epub_builderIMG.py
+    └─OEBPS/
              ├── images/
              ┆          ├── cover.jpg(或cover.png)
              ┆          └── 其他插图.jpg/png
