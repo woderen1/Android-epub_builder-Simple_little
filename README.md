@@ -20,8 +20,9 @@
 ## 事前准备需要的软件有
 - mt管理器[[下载链接](https://mt2.cn/download/)]
 - termux[[github下载](https://github.com/termux/termux-app)或者在F-droid上下载]
-- epub_builder.py[[py脚本下载](https://github.com/wodegeren/Android-epub_builder-Simple_little/releases/tag/Android-epub_builder)](_更建议直接从Code下载代码**而非这个链接，Releases链接不保证更新**_)
-## 准备好后，第一步
+
+### 纯文字epub制作方法
+
 - 打开mt管理器
 在`/storage/emulated/0/Download/eebook`创建`chapters`文件夹和`covers`文件夹
 <details markdown='1'><summary>展开/收起</summary>
@@ -31,7 +32,6 @@
 
 </details>
 
-###纯文本使用方法
 你需要下载的脚本是`epub_builder.py`。
 创建文件方式:在`chapters`文件夹下直接创建文件名形如`00001.txt`的文件，注意如果超过10章，那文件名就是`00010.txt`的形式，超过百章，文件名就是`00100.txt`的形式。千章就以此类推。
 注意，cover.jpg或者cover.png的图片的大小至少是800×600
