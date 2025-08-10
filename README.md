@@ -40,17 +40,17 @@
 
 ----
 
-    
+
     ```
     /storage/emulated/0/Download/eebook/
     ├── chapters/
     │   ├── 00001.txt
     │   ├── 00002.txt
-    │   └── ... (more chapters)
+    │   └── ... (more txt)
     ├── covers/
     │   └── cover.jpg (or.png)
     └── epub_builder.py
-    
+
     ```
 
 </details>
@@ -91,9 +91,6 @@
 
 7. 准备好了，最后一个命令 `python epub_builder.py`
 
-小提示<details markdown='1'><summary>展开/收起</summary>
-`epub_builder.py`里可以根据代码间注释来改变你的epub电子书的部分信息哦
-
 </details>
 
 ### 带插图功能使用方法
@@ -107,14 +104,15 @@
 
     /storage/emulated/0/Download/Ezbook/
     ├─v0.02epub_builderIMG.py
-    └─OEBPS/
-             ├── images/
-             ┆          ├── cover.jpg(或cover.png)
-             ┆          └── 其他插图.jpg/png
-             ├── 00001.txt
-             ├── 00002.txt
-             ├── 00003.txt
-             └── (more txt)
+    └─ OEBPS/
+                ├── images/
+                ║          ├cover.jpg(或cover.png)
+                ║          └其他插图.jpg/png
+                ├── 00001.txt
+                ├── 00002.txt
+                ├── 00003.txt
+                └── (more txt)
+
 
 </details>
 
@@ -136,8 +134,11 @@ Termux的时间
 
 打开目录 `cd /storage/emulated/0/Download/Ezbook/`
 
-运行使用脚本文件 `python v0.02Gepub_builderIMG.py`
+运行使用脚本文件 `python v0.02epub_builderIMG.py`
 
+----
+小提示<details markdown='1'><summary>展开/收起</summary>
+两个`.py`里都可以根据代码间注释来改变你的epub电子书的部分信息哦
 -
 # 想贡献的看这里
 <details markdown='1'><summary>展开/收起</summary>
