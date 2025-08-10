@@ -94,9 +94,21 @@
 ### 带插图功能使用方法
 -
 需要下载的脚本是 `v0.02epub_builderIMG.py`
-
+----
 在`/storage/emulated/0/Download/Ezbook/`下创建`OEBPS`文件夹。在`OEBPS`文件夹里创建txt文件(与原来规则不变)和`images`文件夹(与txt文件同级)
 `images`文件夹内存放封面图片(与原来规则一样)和文中插图。**只支持jpg和png** 敏感大小写
+最后效果大概是
+<details markdown='1'><summary>展开/收起</summary>
+
+    ```
+    /storage/emulated/0/Download/Ezbook/
+    ├── OEBPS
+    
+    └── epub_builder.py
+    
+    ```
+
+</details>
 -
 引用方法，在txt文本中，单独一行，在那一行中使用 `[图片名.图格式]` 的方式来引用。
 -
