@@ -40,18 +40,20 @@
 ----
     
     ```
-    /storage/emulated/0/Download/eebook/
-    ├── chapters/
-    │   ├── 00001.txt
-    │   ├── 00002.txt
-    │   └── ... (more chapters)
-    ├── covers/
-    │   └── cover.jpg (or.png)
-    └── epub_builder.py
+    /storage/emulated/0/Download/Ezbook/
+└── OEBPS/
+    ├── images/
+    │   ├── cover.jpg(或.png)
+    │   └── 其他插图.jpg/png
+    ├── 00001.txt
+    ├── 00002.txt
+    ┕── ... (更多章节文件)
+
     
     ```
 
 </details>
+----
 - 现在是termux的时间了
 
 <details markdown='1'><summary>展开/收起</summary>
