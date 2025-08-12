@@ -75,7 +75,7 @@ def main():
         
         print("[8/8] 完成!")
         print("="*50)
-        print(f"EPUB生成成功: {output_path}")
+        print(f"免费EPUB生成成功: {output_path}，付费下载均为盗版哦！")
         print(f"文件大小: {os.path.getsize(output_path)//1024} KB")
         print("="*50)
     
