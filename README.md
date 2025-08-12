@@ -1,7 +1,7 @@
 用来存彩蛋版本的分支哦
 -
 
-![魅魔](images/img1.jpg)
+![魅魔](https://cdn.jsdelivr.net/gh/woderen1/Android-epub_builder-Simple_little/blob/Fun%21_Demon/images%2Fimg1.jpg)
 
 ----
 
