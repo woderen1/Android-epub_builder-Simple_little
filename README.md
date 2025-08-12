@@ -130,9 +130,8 @@ Termux的时间
 
 安装python `pkg install python`
 
-安装lxml `pip install lxml`
 
-打开目录 `cd /storage/emulated/0/Download/Ezbook/`
+打开目录的命令是 `cd /storage/emulated/0/Download/Ezbook/`
 
 运行使用脚本文件 `python v0.02epub_builderIMG.py`
 
