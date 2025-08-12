@@ -3,393 +3,389 @@
 
 import os
 import re
+import uuid
 import zipfile
-import datetime
-from xml.etree import ElementTree as ET
-from xml.dom import minidom
+import shutil
+import sys
+from datetime import datetime
 
-# =====================================================================
-# 用户配置区域 - 请根据实际情况修改以下参数
-# =====================================================================
-
-# 工作目录（Termux中的绝对路径）
-WORK_DIR = "/storage/emulated/0/Download/Ezbook/"
-
-# 书籍元数据
-BOOK_METADATA = {
-    "title": "魅魔の记录",      # 书名
-    "author": "L魅魔！",           # 作者
-    "language": "zh-CN",        # 语言代码
-    "publisher": "魅魔出版",    # 出版社
-    "isbn": "",  # ISBN号
-    "uid": "urn:uuid:12345678-90ab-cdef-1234-567890abcdef"  # 唯一标识符
-}
-
-# =====================================================================
-# 主处理脚本（无需修改以下代码）
-# =====================================================================
+# =============== 用户配置区域 (按需修改) ===============
+WORK_DIR = "/storage/emulated/0/Download/Exzbook/"
+BOOK_TITLE = "魅魔の记录"
+BOOK_AUTHOR = "L魅魔!"
+BOOK_LANG = "zh-CN"
+PUBLISHER = "魅魔出版"
+ISBN = "none"
+# ==================================================
 
 def main():
     try:
-        print("📖 魅魔开始写书")
-        print(f"📂 魅魔工作的地方: {WORK_DIR}")
+        print("="*50)
+        print(f"魅魔开始写书: {BOOK_TITLE}")
+        print("="*50)
         
-        # 检查工作目录
+        # 清理旧临时文件
+        print("[1/8] 魅魔删除旧素材...")
+        temp_dir = os.path.join(WORK_DIR, "temp_epub")
+        shutil.rmtree(temp_dir, ignore_errors=True)
+        
+        # 准备目录结构
+        print("[2/8] 魅魔正在写结构目录...")
         oebps_dir = os.path.join(WORK_DIR, "OEBPS")
-        images_dir = os.path.join(oebps_dir, "images")
+        os.makedirs(temp_dir, exist_ok=True)
+        epub_dir = os.path.join(temp_dir, "OEBPS")
+        os.makedirs(epub_dir, exist_ok=True)
         
-        if not os.path.exists(oebps_dir):
-            print("❌ 错误: OEBPS目录不存在")
-            return
+        # 创建必需目录
+        os.makedirs(os.path.join(epub_dir, "styles"), exist_ok=True)
+        os.makedirs(os.path.join(epub_dir, "images"), exist_ok=True)
         
-        if not os.path.exists(images_dir):
-            os.makedirs(images_dir)
-            print("🖼️ 魅魔创建images目录")
+        # 1. 转换文本文件为XHTML
+        print("[3/8] 魅魔正在转换文本章节为XHTML...")
+        chapters = convert_txt_to_xhtml(oebps_dir, epub_dir)
+        print(f"  魅魔转换好了呢: 共 {len(chapters)} 个章节")
         
-        # 1. 处理文本文件
-        print("⏳ 魅魔正在处理文本...")
-        txt_files = find_and_convert_txt(oebps_dir)
+        # 2. 拷贝图片
+        print("[4/8] 魅魔正在贴图片...")
+        cover_image = copy_images(os.path.join(oebps_dir, "images"), os.path.join(epub_dir, "images"))
+        if cover_image:
+            print(f"  封面图片: {cover_image}")
+        else:
+            print("  魅魔没找到封面图,只能用文字封面了")
         
-        # 2. 创建核心文件
-        print("⚙️ 魅魔正在召唤配置文件...")
-        create_content_opf(oebps_dir, txt_files)
-        create_toc_files(oebps_dir, txt_files)
-        create_cover_page(oebps_dir)
-        create_container_files(WORK_DIR)
+        # 3. 生成必要文件
+        print("[5/8] 魅魔正在做电子书组件...")
+        gen_css_file(epub_dir)
+        gen_nav_file(epub_dir, chapters)
+        gen_toc_ncx(epub_dir, BOOK_TITLE, chapters)
+        gen_cover(epub_dir, cover_image)
+        gen_package_opf(epub_dir, BOOK_TITLE, BOOK_AUTHOR, BOOK_LANG, PUBLISHER, ISBN, chapters, cover_image)
+        gen_container_xml(temp_dir)
+        gen_mimetype(temp_dir)
+        print("  所有组件魅魔都做好了")
         
-        # 3. 打包EPUB
-        epub_path = os.path.join(WORK_DIR, f"{BOOK_METADATA['title']}.epub")
-        package_epub(WORK_DIR, epub_path)
+        # 4. 打包EPUB
+        print("[6/8] 魅魔正在写整本书...")
+        output_path = os.path.join(WORK_DIR, f"{BOOK_TITLE}.epub")
+        create_epub(temp_dir, output_path)
         
-        print(f"\n✅ 魅魔写好书了! 路径: {epub_path}")
-        print(f"📚 书籍信息: 《{BOOK_METADATA['title']}》- {BOOK_METADATA['author']}")
+        # 5. 清理临时文件
+        print("[7/8] 魅魔正在清理临时素材...")
+        shutil.rmtree(temp_dir, ignore_errors=True)
         
-    except Exception as e:
-        print(f"\n❌ 魅魔发现了错误: {str(e)}")
-        print("⚠️ 请检查: 1) 文件路径 2) 文本编码 3) 图片文件名")
-
-def find_and_convert_txt(oebps_dir):
-    """查找并转换TXT文件为XHTML"""
-    txt_files = []
+        print("[8/8] 完成!")
+        print("="*50)
+        print(f"魅魔写好书了: {output_path}!魅魔小姐希望主人不是被盗版骗花钱下载了脚本")
+        print(f"文件大小: {os.path.getsize(output_path)//1024} KB")
+        print("="*50)
     
-    for fname in os.listdir(oebps_dir):
-        if not fname.endswith('.txt'):
-            continue
-            
-        print(f"  处理文件: {fname}")
-        base_name = os.path.splitext(fname)[0]
-        xhtml_name = f"{base_name}.xhtml"
+    except Exception as e:
+        # 错误处理
+        print("\n" + "!"*50)
+        print("魅魔小姐发现了错误!")
+        print(f"魅魔小姐认为可能是这些错误类型: {type(e).__name__}")
+        print(f"错误信息: {str(e)}")
+        print("!"*50)
         
-        # 读取并转换内容
-        txt_path = os.path.join(oebps_dir, fname)
-        with open(txt_path, 'r', encoding='utf-8') as f:
+        # 尝试清理临时文件
+        print("\n魅魔正在清理临时素材...")
+        temp_dir = os.path.join(WORK_DIR, "temp_epub")
+        shutil.rmtree(temp_dir, ignore_errors=True)
+        print("魅魔清理好了")
+        
+        sys.exit(1)  # 退出并返回错误代码
+
+def convert_txt_to_xhtml(src_dir, dest_dir):
+    """转换TXT文件为XHTML格式，处理图片引用"""
+    chapter_files = sorted([f for f in os.listdir(src_dir) if f.endswith(".txt") and re.match(r'^\d+', f)])
+    chapters = []
+    
+    for filename in chapter_files:
+        # 处理文件名（保留自然语言后缀）
+        basename = os.path.splitext(filename)[0]
+        xhtml_name = f"{basename}.xhtml"
+        title = re.sub(r'^\d+', '', basename).strip()
+        
+        with open(os.path.join(src_dir, filename), 'r', encoding='utf-8') as f:
+            content = f.read()
+            
+             # +++ 添加章节转换提示 +++
+        print(f"  转换章节: {filename} -> {xhtml_name} (标题: '{title}')")
+        # +++++++++++++++++++++++
+        
+        with open(os.path.join(src_dir, filename), 'r', encoding='utf-8') as f:
             content = f.read()
         
-        content = convert_txt_to_xhtml(content)
+        # 处理图片引用 [image.jpg]
+        content = re.sub(
+            r'\[([^\]]+\.(?:jpg|png))\]', 
+            r'<img class="illustration" src="images/\1" alt="插图"/>', 
+            content
+        )
         
-        # 保存为XHTML
-        xhtml_path = os.path.join(oebps_dir, xhtml_name)
-        with open(xhtml_path, 'w', encoding='utf-8') as f:
-            f.write(content)
+        # 包裹段落
+        paragraphs = [p.strip() for p in content.split('\n') if p.strip()]
+        wrapped_content = '\n'.join([f'    <p>{p}</p>' for p in paragraphs])
         
-        # 添加到文件列表
-        txt_files.append({
-            "base": base_name,
-            "xhtml": xhtml_name,
-            "number": extract_number(base_name),
-            "title": extract_title(base_name)
-        })
-    
-    # 按数字排序
-    txt_files.sort(key=lambda x: x["number"])
-    return txt_files
-
-def convert_txt_to_xhtml(content):
-    """转换纯文本到XHTML格式"""
-    # 删除所有空行
-    lines = [line for line in content.splitlines() if line.strip()]
-    
-    # 转换图片引用
-    processed = []
-    for line in lines:
-        img_match = re.match(r'^\[([^\]]+\.(jpg|png))\]$', line.strip())
-        if img_match:
-            img_file = img_match.group(1)
-            line = f'    <div><img src="images/{img_file}" alt="插图"/></div>'
-        else:
-            line = f'    <p>{line}</p>'
-        processed.append(line)
-    
-    # 包装为完整XHTML
-    xhtml_content = '''<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+        # 生成XHTML
+        with open(os.path.join(dest_dir, xhtml_name), 'w', encoding='utf-8') as f:
+            f.write(f'''<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>内容页</title>
-    <link href="styles/main.css" rel="stylesheet" type="text/css"/>
+    <title>{title}</title>
+    <link rel="stylesheet" type="text/css" href="styles/main.css"/>
 </head>
 <body>
-{}
+    <h1>{title}</h1>
+{wrapped_content}
 </body>
-</html>'''.format('\n'.join(processed))
-    
-    return xhtml_content
-
-def extract_number(filename):
-    """提取文件名中的数字部分"""
-    number_part = ''.join(filter(str.isdigit, filename))
-    return int(number_part) if number_part else 0
-
-def extract_title(filename):
-    """提取文件名中的文字部分"""
-    return re.sub(r'^\d+', '', filename).strip()
-
-def create_content_opf(oebps_dir, chapters):
-    """创建content.opf文件"""
-    # 创建根元素
-    package = ET.Element('package', {
-        "xmlns": "http://www.idpf.org/2007/opf",
-        "version": "3.0",
-        "unique-identifier": "uid"
-    })
-    
-    # 元数据部分
-    metadata = ET.SubElement(package, 'metadata', {
-        "xmlns:dc": "http://purl.org/dc/elements/1.1/"
-    })
-    
-    ET.SubElement(metadata, 'dc:title').text = BOOK_METADATA['title']
-    ET.SubElement(metadata, 'dc:creator').text = BOOK_METADATA['author']
-    ET.SubElement(metadata, 'dc:language').text = BOOK_METADATA['language']
-    ET.SubElement(metadata, 'dc:publisher').text = BOOK_METADATA['publisher']
-    ET.SubElement(metadata, 'dc:identifier', {"id": "uid"}).text = BOOK_METADATA['uid']
-    ET.SubElement(metadata, 'meta', {"property": "dcterms:modified"}).text = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
-    ET.SubElement(metadata, 'meta', {"name": "cover", "content": "cover-img"})
-    
-    # 清单部分
-    manifest = ET.SubElement(package, 'manifest')
-    
-    # 添加CSS文件
-    ET.SubElement(manifest, 'item', {
-        "id": "main-css",
-        "href": "styles/main.css",
-        "media-type": "text/css"
-    })
-    
-    # 添加封面图片
-    cover_img = find_cover_image(oebps_dir)
-    if cover_img:
-        img_type = "image/jpeg" if cover_img.endswith('.jpg') else "image/png"
-        ET.SubElement(manifest, 'item', {
-            "id": "cover-img",
-            "href": f"images/{cover_img}",
-            "media-type": img_type
+</html>''')
+        
+        chapters.append({
+            'id': f'ch{len(chapters)+1}',
+            'title': title,
+            'filename': xhtml_name
         })
     
-    # 添加封面页面
-    ET.SubElement(manifest, 'item', {
-        "id": "cover",
-        "href": "cover.xhtml",
-        "media-type": "application/xhtml+xml"
-    })
-    
-    # 添加章节文件
-    for chap in chapters:
-        ET.SubElement(manifest, 'item', {
-            "id": chap["base"],
-            "href": chap["xhtml"],
-            "media-type": "application/xhtml+xml"
-        })
-    
-    # 目录文件 (EPUB 2和EPUB 3)
-    ET.SubElement(manifest, 'item', {
-        "id": "toc",
-        "href": "toc.xhtml",
-        "media-type": "application/xhtml+xml",
-        "properties": "nav"
-    })
-    ET.SubElement(manifest, 'item', {
-        "id": "ncx",
-        "href": "toc.ncx",
-        "media-type": "application/x-dtbncx+xml"
-    })
-    
-    # 目录结构
-    spine = ET.SubElement(package, 'spine')
-    spine.set('page-progression-direction', 'ltr')
-    
-    # 封面页
-    ET.SubElement(spine, 'itemref', {"idref": "cover"})
-    
-    # 各章节
-    for chap in chapters:
-        ET.SubElement(spine, 'itemref', {"idref": chap["base"]})
-    
-    # 创建并保存文件
-    xml_str = minidom.parseString(ET.tostring(package)).toprettyxml()
-    opf_path = os.path.join(oebps_dir, 'content.opf')
-    with open(opf_path, 'w', encoding='utf-8') as f:
-        f.write(xml_str)
+    return chapters
 
-def find_cover_image(oebps_dir):
-    """查找封面图片"""
-    images_dir = os.path.join(oebps_dir, 'images')
-    for f in os.listdir(images_dir):
-        if re.match(r'cover\.(jpg|png)', f, re.IGNORECASE):
-            return f
-    return None
+def copy_images(src_img_dir, dest_img_dir):
+    """拷贝图片文件并返回封面图片路径"""
+    if not os.path.exists(src_img_dir):
+        return None
+    
+    cover_image = None
+    for filename in os.listdir(src_img_dir):
+        if not filename.endswith(('.jpg', '.png')):
+            continue
+            
+        src = os.path.join(src_img_dir, filename)
+        dst = os.path.join(dest_img_dir, filename)
+        shutil.copy2(src, dst)
+        
+        # 检查封面
+        if filename.lower().startswith('cover'):
+            cover_image = os.path.join('images', filename)
+    
+    return cover_image
 
-def create_toc_files(oebps_dir, chapters):
-    """创建目录文件（EPUB2和EPUB3）"""
-    # EPUB3目录 (toc.xhtml)
-    toc_xhtml = '''<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html>
+def gen_css_file(epub_dir):
+    """生成CSS样式文件"""
+    css_path = os.path.join(epub_dir, "styles", "main.css")
+    with open(css_path, 'w', encoding='utf-8') as f:
+        f.write('''/* 基础排版样式 */
+p {
+    text-indent: 2em;
+    margin: 0 0 1em 0;
+    text-align: justify;
+    line-height: 1.6;
+}
+
+/* 标题样式 */
+h1, h2 {
+    text-align: center;
+    page-break-after: avoid;
+    margin-top: 2em;
+}
+
+/* 图片样式 */
+img.illustration {
+    display: block;
+    max-width: 90%;
+    margin: 1em auto;
+    text-align: center;
+}
+
+/* 封面样式 */
+#cover {
+    text-align: center;
+    page-break-after: always;
+}
+
+#cover img {
+    height: 95vh;
+    max-width: 100%;
+}''')
+
+def gen_nav_file(epub_dir, chapters):
+    """生成导航文件 nav.xhtml"""
+    with open(os.path.join(epub_dir, "nav.xhtml"), 'w', encoding='utf-8') as f:
+        f.write(f'''<?xml version="1.0" encoding="UTF-8"?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
 <head>
     <title>目录</title>
+    <meta charset="utf-8"/>
 </head>
 <body>
     <nav epub:type="toc">
         <h1>目录</h1>
         <ol>
-            <li><a href="cover.xhtml">封面</a></li>
-            {}
-        </ol>
+            <li><a href="cover.xhtml">封面</a></li>''')
+        
+        for ch in chapters:
+            f.write(f'            <li><a href="{ch["filename"]}">{ch["title"]}</a></li>\n')
+        
+        f.write('''        </ol>
     </nav>
 </body>
-</html>'''.format(
-        '\n'.join([f'            <li><a href="{chap["xhtml"]}">{chap["title"] or "章节" + str(chap["number"])}</a></li>' 
-                  for chap in chapters])
-    )
-    
-    with open(os.path.join(oebps_dir, 'toc.xhtml'), 'w', encoding='utf-8') as f:
-        f.write(toc_xhtml)
-    
-    # EPUB2目录 (toc.ncx)
-    ncx = ET.Element('ncx', {
-        "xmlns": "http://www.daisy.org/z3986/2005/ncx/",
-        "version": "2005-1"
-    })
-    
-    head = ET.SubElement(ncx, 'head')
-    ET.SubElement(head, 'meta', {"name": "dtb:uid", "content": BOOK_METADATA['uid']})
-    
-    doc_title = ET.SubElement(ncx, 'docTitle')
-    ET.SubElement(doc_title, 'text').text = BOOK_METADATA['title']
-    
-    nav_map = ET.SubElement(ncx, 'navMap')
-    
-    # 封面
-    nav_point = ET.SubElement(nav_map, 'navPoint', {"id": "cover", "playOrder": "1"})
-    nav_label = ET.SubElement(nav_point, 'navLabel')
-    ET.SubElement(nav_label, 'text').text = "封面"
-    ET.SubElement(nav_point, 'content', {"src": "cover.xhtml"})
-    
-    # 章节
-    play_order = 2
-    for chap in chapters:
-        nav_point = ET.SubElement(nav_map, 'navPoint', {
-            "id": f"nav-{chap['number']}",
-            "playOrder": str(play_order)
-        })
-        nav_label = ET.SubElement(nav_point, 'navLabel')
-        ET.SubElement(nav_label, 'text').text = chap['title'] or f"章节 {chap['number']}"
-        ET.SubElement(nav_point, 'content', {"src": chap['xhtml']})
-        play_order += 1
-    
-    xml_str = minidom.parseString(ET.tostring(ncx)).toprettyxml()
-    with open(os.path.join(oebps_dir, 'toc.ncx'), 'w', encoding='utf-8') as f:
-        f.write(xml_str)
+</html>''')
 
-def create_cover_page(oebps_dir):
-    """创建封面页"""
-    cover_content = '''<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+def gen_toc_ncx(epub_dir, book_title, chapters):
+    """生成NCX目录"""
+    with open(os.path.join(epub_dir, "toc.ncx"), 'w', encoding='utf-8') as f:
+        f.write(f'''<?xml version="1.0" encoding="UTF-8"?>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
+    <head>
+        <meta name="dtb:uid" content="urn:uuid:{str(uuid.uuid4())}"/>
+        <meta name="dtb:depth" content="1"/>
+        <meta name="dtb:totalPageCount" content="0"/>
+        <meta name="dtb:maxPageNumber" content="0"/>
+    </head>
+    <docTitle><text>{book_title}</text></docTitle>
+    <navMap>
+        <navPoint id="cover" playOrder="1">
+            <navLabel><text>封面</text></navLabel>
+            <content src="cover.xhtml"/>
+        </navPoint>''')
+        
+        for i, ch in enumerate(chapters):
+            f.write(f'''
+        <navPoint id="{ch["id"]}" playOrder="{i+2}">
+            <navLabel><text>{ch["title"]}</text></navLabel>
+            <content src="{ch["filename"]}"/>
+        </navPoint>''')
+        
+        f.write('''
+    </navMap>
+</ncx>''')
+
+def gen_cover(epub_dir, cover_image):
+    """生成封面文件"""
+    cover_content = '''<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>封面</title>
-    <meta charset="utf-8"/>
-    <link href="styles/main.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="styles/main.css"/>
 </head>
-<body class="cover">
-    <div class="cover-image">
-        <img src="images/cover.jpg" alt="封面" epub:type="cover"/>
+<body>
+    <div id="cover">
+        <h1>{title}</h1>
+        <h2>{author}</h2>'''.format(title=BOOK_TITLE, author=BOOK_AUTHOR)
+    
+    if cover_image:
+        cover_content += f'\n        <img src="{cover_image}" alt="封面"/>'
+    
+    cover_content += '''
     </div>
 </body>
 </html>'''
     
-    with open(os.path.join(oebps_dir, 'cover.xhtml'), 'w', encoding='utf-8') as f:
+    with open(os.path.join(epub_dir, "cover.xhtml"), 'w', encoding='utf-8') as f:
         f.write(cover_content)
 
-def create_container_files(work_dir):
-    """创建META-INF和mimetype文件"""
-    # 创建META-INF目录
-    meta_inf = os.path.join(work_dir, 'META-INF')
-    os.makedirs(meta_inf, exist_ok=True)
+def gen_package_opf(epub_dir, title, author, lang, publisher, isbn, chapters, cover_image):
+    """生成package.opf文件"""
+    now = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
     
-    # container.xml
-    container = '''<?xml version="1.0" encoding="UTF-8"?>
+    with open(os.path.join(epub_dir, "package.opf"), 'w', encoding='utf-8') as f:
+        f.write(f'''<?xml version="1.0" encoding="UTF-8"?>
+<package version="3.0" 
+        xmlns="http://www.idpf.org/2007/opf"
+        unique-identifier="book-id">
+    <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+        <dc:identifier id="book-id">urn:uuid:{str(uuid.uuid4())}</dc:identifier>
+        <dc:title>{title}</dc:title>
+        <dc:creator>{author}</dc:creator>
+        <dc:language>{lang}</dc:language>
+        <dc:publisher>{publisher}</dc:publisher>
+        <dc:identifier>{isbn}</dc:identifier>
+        <meta property="dcterms:modified">{now}</meta>''')
+        
+        if cover_image:
+            cover_filename = os.path.basename(cover_image)
+            cover_type = "image/jpeg" if cover_filename.lower().endswith('.jpg') else "image/png"
+            f.write(f'''
+        <meta name="cover" content="cover-img"/>
+        <meta property="rendition:layout">pre-paginated</meta>''')
+        
+        f.write('''
+    </metadata>
+    <manifest>
+        <item id="nav" href="nav.xhtml" properties="nav" media-type="application/xhtml+xml"/>
+        <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
+        <item id="cover" href="cover.xhtml" media-type="application/xhtml+xml"/>''')
+        
+        for ch in chapters:
+            f.write(f'''
+        <item id="{ch["id"]}" href="{ch["filename"]}" media-type="application/xhtml+xml"/>''')
+        
+        f.write('''
+        <item id="main-css" href="styles/main.css" media-type="text/css"/>''')
+        
+        if cover_image:
+            cover_filename = os.path.basename(cover_image)
+            cover_type = "image/jpeg" if cover_filename.lower().endswith('.jpg') else "image/png"
+            f.write(f'''
+        <item id="cover-img" href="{cover_image}" media-type="{cover_type}" properties="cover-image"/>''')
+        
+        # 添加图片资源
+        images_dir = os.path.join(epub_dir, "images")
+        if os.path.exists(images_dir):
+            for img in os.listdir(images_dir):
+                img_type = "image/jpeg" if img.lower().endswith('.jpg') else "image/png"
+                f.write(f'''
+        <item id="img-{img.split(".")[0]}" href="images/{img}" media-type="{img_type}"/>''')
+        
+        f.write('''
+    </manifest>
+    <spine toc="ncx">
+        <itemref idref="cover"/>''')
+        
+        for ch in chapters:
+            f.write(f'''
+        <itemref idref="{ch["id"]}"/>''')
+        
+        f.write('''
+    </spine>
+    <guide>
+        <reference type="cover" title="封面" href="cover.xhtml"/>
+    </guide>
+</package>''')
+
+def gen_container_xml(temp_dir):
+    """生成container.xml"""
+    meta_inf_dir = os.path.join(temp_dir, "META-INF")
+    os.makedirs(meta_inf_dir, exist_ok=True)
+    
+    with open(os.path.join(meta_inf_dir, "container.xml"), 'w', encoding='utf-8') as f:
+        f.write('''<?xml version="1.0"?>
 <container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
     <rootfiles>
-        <rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>
+        <rootfile full-path="OEBPS/package.opf" media-type="application/oebps-package+xml"/>
     </rootfiles>
-</container>'''
-    
-    with open(os.path.join(meta_inf, 'container.xml'), 'w', encoding='utf-8') as f:
-        f.write(container)
-    
-    # mimetype
-    with open(os.path.join(work_dir, 'mimetype'), 'w') as f:
+</container>''')
+
+def gen_mimetype(temp_dir):
+    """生成mimetype文件"""
+    with open(os.path.join(temp_dir, "mimetype"), 'w', encoding='utf-8') as f:
         f.write('application/epub+zip')
 
-def package_epub(work_dir, output_path):
-    """打包为EPUB文件"""
-    # 创建ZIP文件（注意：mimetype必须作为第一个文件且不压缩）
-    with zipfile.ZipFile(output_path, 'w') as zipf:
-        # 1. 添加mimetype（无压缩）
-        mimetype_path = os.path.join(work_dir, 'mimetype')
-        if os.path.exists(mimetype_path):
-            zipf.write(mimetype_path, 'mimetype', compress_type=zipfile.ZIP_STORED)
+def create_epub(temp_dir, output_path):
+    """创建EPUB压缩文件"""
+    with zipfile.ZipFile(output_path, 'w', compression=zipfile.ZIP_DEFLATED) as zf:
+        # 单独处理mimetype文件（不能压缩）
+        mimetype_path = os.path.join(temp_dir, "mimetype")
+        zf.write(mimetype_path, "mimetype", compress_type=zipfile.ZIP_STORED)
         
-        # 2. 添加META-INF
-        meta_inf = os.path.join(work_dir, 'META-INF')
-        if os.path.exists(meta_inf):
-            for root, dirs, files in os.walk(meta_inf):
-                for file in files:
-                    file_path = os.path.join(root, file)
-                    arcname = os.path.relpath(file_path, work_dir)
-                    zipf.write(file_path, arcname)
-        
-        # 3. 添加OEBPS内容
-        oebps_dir = os.path.join(work_dir, 'OEBPS')
-        if os.path.exists(oebps_dir):
-            for root, dirs, files in os.walk(oebps_dir):
-                for file in files:
-                    # 跳过TXT原始文件
-                    if file.endswith('.txt'):
-                        continue
-                        
-                    file_path = os.path.join(root, file)
-                    arcname = os.path.relpath(file_path, work_dir)
-                    zipf.write(file_path, arcname)
-    
-    print(f"\n📦 魅魔工作完毕，魅魔小姐希望你没有被盗版骗付费下载: {output_path}")
+        # 添加其他文件（需要压缩）
+        for root, dirs, files in os.walk(temp_dir):
+            for file in files:
+                if file == "mimetype":
+                    continue
+                
+                full_path = os.path.join(root, file)
+                rel_path = os.path.relpath(full_path, temp_dir)
+                zf.write(full_path, rel_path)
 
 if __name__ == "__main__":
-    # 确保创建CSS文件
-    oebps_dir = os.path.join(WORK_DIR, "OEBPS")
-    css_dir = os.path.join(oebps_dir, "styles")
-    os.makedirs(css_dir, exist_ok=True)
-    
-    css_content = '''/* 基础样式 */
-body { font-family: serif; margin: 1em; }
-.cover { text-align: center; }
-.cover-image { max-height: 95vh; }
-.cover-image img { max-height: 95vh; margin: 0 auto; }'''
-    
-    css_path = os.path.join(css_dir, "main.css")
-    if not os.path.exists(css_path):
-        with open(css_path, 'w', encoding='utf-8') as f:
-            f.write(css_content)
-    
     main()
