@@ -6,7 +6,7 @@ import re
 import uuid
 import zipfile
 import shutil
-import sys  # 新增导入sys模块
+import sys
 from datetime import datetime
 
 # =============== 用户配置区域 (按需修改) ===============
