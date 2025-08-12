@@ -102,7 +102,7 @@
 最后效果大概是
 <details markdown='1'><summary>展开/收起</summary>
 
-    /storage/emulated/0/Download/Ezbook/
+    /storage/emulated/0/Download/Exzbook/
     ├─v0.02epub_builderIMG.py
     └─ OEBPS/
                 ├── images/
