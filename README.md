@@ -140,8 +140,12 @@ __自然语言指中文、英文、日文、俄文等人类说的语言__
 -
 ❗假如你的图片文件名是`filename.jpg`，那么引用时就单开一行写`[filename.jpg]`
 脚本会帮助你的
+
+
 Termux的时间
-需要安装python和lxml
+
+
+需要安装python
 
 安装python `pkg install python`
 
