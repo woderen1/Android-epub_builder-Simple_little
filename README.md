@@ -150,6 +150,12 @@ Termux的时间
 小提示<details markdown='1'><summary>展开/收起</summary>
 两个`.py`里都可以根据代码间注释来改变你的epub电子书的部分信息哦
 -
+
+作者很难会选择更新的功能:多级目录
+
+原因:很简单，作者用不上，作者要不选择很多epub文件打包成zip，要不选择直接目录全部平铺。这两种方法的人类可读性都可以保证
+
+-
 # 想贡献的看这里
 <details markdown='1'><summary>展开/收起</summary>
 
