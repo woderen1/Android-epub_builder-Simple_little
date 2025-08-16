@@ -16,6 +16,8 @@ BOOK_AUTHOR = "默认作者"
 BOOK_LANG = "zh-CN"
 PUBLISHER = "P默认"
 ISBN = "none"
+PUB_DATE = "2025-01-01"  # 新增：出版日期，格式YYYY-MM-DD
+BOOK_DESCRIPTION = "这里是书籍的简介内容"  # 新增：书籍简介
 # ==================================================
 
 def main():
@@ -59,7 +61,7 @@ def main():
         gen_nav_file(epub_dir, chapters)
         gen_toc_ncx(epub_dir, BOOK_TITLE, chapters)
         gen_cover(epub_dir, cover_image)
-        gen_package_opf(epub_dir, BOOK_TITLE, BOOK_AUTHOR, BOOK_LANG, PUBLISHER, ISBN, chapters, cover_image)
+        gen_package_opf(epub_dir, BOOK_TITLE, BOOK_AUTHOR, BOOK_LANG, PUBLISHER, ISBN, chapters, cover_image, PUB_DATE, BOOK_DESCRIPTION)
         gen_container_xml(temp_dir)
         gen_mimetype(temp_dir)
         print("  所有组件生成完成")
@@ -283,7 +285,7 @@ def gen_cover(epub_dir, cover_image):
     with open(os.path.join(epub_dir, "cover.xhtml"), 'w', encoding='utf-8') as f:
         f.write(cover_content)
 
-def gen_package_opf(epub_dir, title, author, lang, publisher, isbn, chapters, cover_image):
+def gen_package_opf(epub_dir, title, author, lang, publisher, isbn, chapters, cover_image, pub_date, description):
     """生成package.opf文件"""
     now = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
     
@@ -299,6 +301,8 @@ def gen_package_opf(epub_dir, title, author, lang, publisher, isbn, chapters, co
         <dc:language>{lang}</dc:language>
         <dc:publisher>{publisher}</dc:publisher>
         <dc:identifier>{isbn}</dc:identifier>
+        <dc:date>{PUB_DATE}</dc:date>  <!-- 新增出版日期 -->
+        <dc:description>{BOOK_DESCRIPTION}</dc:description>  <!-- 新增书籍简介 -->
         <meta property="dcterms:modified">{now}</meta>''')
         
         if cover_image:
