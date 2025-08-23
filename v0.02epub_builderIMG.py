@@ -9,7 +9,7 @@ import shutil
 import sys
 from datetime import datetime
 
-# =============== 用户配置区域 (按需修改) ===============
+# =============== 用户配置区域 (按需修改引号内文字) ===============
 WORK_DIR = "/storage/emulated/0/Download/Exzbook/"
 BOOK_TITLE = "电子书名"
 BOOK_AUTHOR = "默认作者"
